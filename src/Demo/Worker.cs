@@ -13,10 +13,13 @@ public class Worker : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            _logger.LogInformation($"Worker running at: {DateTimeOffset.Now}");
+            DateTimeOffset startAt = DateTimeOffset.Now;
+
+            _logger.LogInformation($"Worker running at: {startAt}");
 
             string? filePath = Environment.GetEnvironmentVariable("INPUT_FILE_PATH");
-            string? currentLine;
+            string? currentLine = null;
+            int totalLines = 0;
 
             if (File.Exists(filePath))
             {
@@ -24,12 +27,16 @@ public class Worker : BackgroundService
                 using (StreamReader reader = new StreamReader(stream))
                 while ((currentLine = reader.ReadLine()) != null)
                 {
-                        _logger.LogInformation(currentLine);
+                    totalLines++;                    
                 }
             } else
             {
                 _logger.LogWarning($"Worker has not found input file {filePath}. Searching again on next iteration");
             }
+
+            DateTimeOffset endAt = DateTimeOffset.Now;
+
+            _logger.LogInformation($"Worker stopping at: {endAt}. It took {endAt.ToUnixTimeMilliseconds() - startAt.ToUnixTimeMilliseconds()} ms to read {totalLines} lines of file");
 
             await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
         }
