@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Demo;
 
 public class Worker : BackgroundService
@@ -36,7 +38,9 @@ public class Worker : BackgroundService
 
             DateTimeOffset endAt = DateTimeOffset.Now;
 
-            _logger.LogInformation($"Worker stopping at: {endAt}. It took {endAt.ToUnixTimeMilliseconds() - startAt.ToUnixTimeMilliseconds()} ms to read {totalLines} lines of file");
+            _logger.LogInformation($"Worker stopping at: {endAt}");
+            _logger.LogInformation($"Time spent: {endAt.ToUnixTimeMilliseconds() - startAt.ToUnixTimeMilliseconds()} ms");
+            _logger.LogInformation($"Memory spent: {Process.GetCurrentProcess().WorkingSet64/1024/1024} mb");
 
             await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
         }
