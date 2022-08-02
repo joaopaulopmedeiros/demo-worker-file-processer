@@ -4,7 +4,8 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development",
+        "INPUT_FILE_PATH": "C:\\\\demo\\dataset\\ml-25m\\ratings.csv"
       }
     }
   }
